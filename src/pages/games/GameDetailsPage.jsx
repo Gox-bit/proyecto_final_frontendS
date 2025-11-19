@@ -16,18 +16,29 @@ function GameDetailsPage() {
 
     const fetchGameAndReviews = async () => {
         try {
+            setLoading(true); // Buena práctica asegurarnos de que loading es true al empezar
+
+            // 1. Obtenemos el juego. 
+            // Como getGameById ya devuelve el objeto limpio, lo guardamos directamente.
             const gameData = await getGameById(id);
+            console.log("Datos del juego recibidos en componente:", gameData);
             setGame(gameData);
+
+            // 2. Obtenemos las reseñas.
+            // Como getReviewsByGame ya devuelve el array limpio, lo guardamos directamente.
             const reviewsData = await getReviewsByGame(id);
-            setReviews(reviewsData);
+            console.log("Reseñas recibidas en componente:", reviewsData);
+
+            // CAMBIO AQUÍ: Usamos '|| []' (operador OR). 
+            // Si reviewsData es undefined, usaremos un array vacío.
+            setReviews(reviewsData || []);
         } catch (err) {
             setError('Error al cargar los detalles del juego o las reseñas.');
-            console.error(err);
+            console.error("Error en fetchGameAndReviews:", err);
         } finally {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchGameAndReviews();
     }, [id]);
@@ -70,11 +81,19 @@ function GameDetailsPage() {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-4xl font-bold mb-4">{game.title}</h1>
-            <p className="text-gray-600 mb-2">Género: {game.genre}</p>
-            <p className="text-gray-600 mb-4">Calificación promedio: {game.averageRating ? game.averageRating.toFixed(1) : 'N/A'} ({game.reviewCount} reseñas)</p>
+            {/* CAMBIO 1: game.titulo en lugar de game.title */}
+            <h1 className="text-4xl font-bold mb-4">{game.titulo}</h1>
+            
+            {/* CAMBIO 2: game.genero en lugar de game.genre */}
+            <p className="text-gray-600 mb-2">Género: {game.genero}</p>
+            
+            {/* CAMBIO 3: game.puntuacionPromedio y game.numResenas */}
+            <p className="text-gray-600 mb-4">
+                Calificación promedio: {game.puntuacionPromedio ? game.puntuacionPromedio.toFixed(1) : 'N/A'} ({game.numResenas || 0} reseñas)
+            </p>
 
             <h2 className="text-2xl font-semibold mt-8 mb-4">Reseñas</h2>
+            
             {user ? (
                 <ReviewForm gameId={id} onSubmit={handleNewReview} />
             ) : (

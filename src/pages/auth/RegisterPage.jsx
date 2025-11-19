@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { registerUser } from '../../services/auth';
-import { useNavigate } from 'react-router-dom';
+// CORRECCIÓN AQUÍ ABAJO: Añadimos Link a la importación
+import { useNavigate, Link } from 'react-router-dom';
 
 function RegisterPage() {
     const [username, setUsername] = useState(''); 
@@ -15,9 +16,16 @@ function RegisterPage() {
         setError(null);
         setSuccess(null);
         try {
+            // Nota mental: Asumimos que registerUser funciona bien. 
+            // Si falla, revisaremos services/auth.js después.
             await registerUser({ username, email, password });
             setSuccess('Registro exitoso. Ahora puedes iniciar sesión.');
-            navigate('/login');
+            
+            // Pequeña mejora: esperar 1.5 segundos para que el usuario lea el mensaje de éxito antes de redirigir
+            setTimeout(() => {
+                navigate('/login');
+            }, 1500);
+            
         } catch (err) {
             setError(err.response?.data?.message || 'Error de registro. Inténtalo de nuevo.');
             console.error("Registration failed:", err);

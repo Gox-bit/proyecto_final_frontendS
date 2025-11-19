@@ -27,7 +27,7 @@ export const getGameById = async (id) => {
     try {
         const response = await api.get(`/games/${id}`);
         console.log("services/games.js - getGameById - Respuesta:", response.data);
-        return response.data; // Esto debería devolver un solo objeto de juego
+        return response.data.data; 
     } catch (error) {
         console.error(`services/games.js - Error al llamar a la API (getGameById) para ID ${id}:`, error);
         throw error;

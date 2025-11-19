@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 
+// CAMBIO 1: Asegurarnos de leer las propiedades en español si estamos editando
 function ReviewForm({ gameId, onSubmit, initialReview = null }) {
-    const [rating, setRating] = useState(initialReview ? initialReview.rating : 5);
-    const [comment, setComment] = useState(initialReview ? initialReview.comment : '');
+    // Si initialReview existe, leemos 'calificacion' y 'comentario'
+    const [rating, setRating] = useState(initialReview ? initialReview.calificacion : 5);
+    const [comment, setComment] = useState(initialReview ? initialReview.comentario : '');
     const [loading, setLoading] = useState(false);
+
+// En src/components/reviews/ReviewForm.jsx
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await onSubmit({ rating, comment });
+            // CORRECCIÓN AQUÍ: 
+            // Cambiamos 'calificacion' por 'puntuacion' (tal como lo pide tu Modelo)
+            await onSubmit({ 
+                puntuacion: rating,  // <--- ¡ESTA ES LA CLAVE!
+                comentario: comment 
+            });
+            
             setComment('');
             setRating(5);
         } catch (error) {
@@ -21,6 +31,7 @@ function ReviewForm({ gameId, onSubmit, initialReview = null }) {
 
     return (
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-6">
+            {/* ... El resto del JSX se queda EXACTAMENTE IGUAL ... */}
             <h3 className="text-xl font-semibold mb-4">{initialReview ? "Editar Reseña" : "Añadir Nueva Reseña"}</h3>
             <div className="mb-4">
                 <label htmlFor="rating" className="block text-gray-700 text-sm font-bold mb-2">
