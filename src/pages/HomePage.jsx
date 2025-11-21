@@ -34,7 +34,6 @@ const HomePage = () => {
     return (
         <div className="min-h-screen bg-gray-950 text-gray-100 font-sans pb-12">
             
-            {/* --- HERO --- */}
             <header className="py-12 px-4 text-center relative overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-purple-900/10 blur-3xl -z-10 rounded-full opacity-50 pointer-events-none"></div>
                 
@@ -93,25 +92,28 @@ const HomePage = () => {
                                     </div>
 
                                     {}
-                                    <div className="p-5 flex flex-col flex-grow relative z-20">
-                                        <div className="mb-4">
-                                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 mb-2 border border-purple-500/20">
-                                                {game.genero}
-                                            </span>
-                                            <h3 className="text-lg font-bold text-white leading-tight group-hover:text-purple-400 transition-colors line-clamp-2">
-                                                {game.titulo}
-                                            </h3>
-                                        </div>
-                                        
-                                        <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-800/50">
-                                            <span className="text-xs text-gray-500 font-medium">Ver detalles</span>
-                                            <div className="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center group-hover:bg-purple-600 transition-colors">
-                                                <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
+                                <div className="p-5 flex flex-col flex-grow relative z-20">
+    <div className="mb-4">
+        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 mb-2 border border-purple-500/20">
+            {game.genero}
+        </span>
+        <h3 className="text-lg font-bold text-white leading-tight group-hover:text-purple-400 transition-colors line-clamp-1">
+            {game.titulo}
+        </h3>
+        
+        {}
+        <p className="text-gray-400 text-xs mt-2 line-clamp-2">
+            {game.descripcion || "Sin descripción disponible."}
+        </p>
+        {}
+    </div>
+    
+    <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-800/50">
+        {}
+    </div>
+</div>
+                </div>
+            </Link>
                         ))}
                     </div>
                 )}
