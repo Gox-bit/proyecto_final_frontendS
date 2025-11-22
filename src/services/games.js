@@ -3,7 +3,6 @@ import api from './api';
 export const getGames = async () => {
     try {
         const response = await api.get('/games');
-     
         
         if (Array.isArray(response.data)) {
             return response.data;
@@ -11,7 +10,6 @@ export const getGames = async () => {
             console.error("ERROR: La respuesta no es un array.", response.data);
             return [];
         }
-
     } catch (error) {
         console.error("Error al llamar a la API (getGames):", error);
         throw error;
@@ -23,8 +21,6 @@ export const getGameById = async (id) => {
 
     try {
         const response = await api.get(`/games/${id}`);
-        console.log("📦 Datos recibidos del Backend para ID", id, ":", response.data);
-        
         if (response.data.titulo) return response.data;
         if (response.data.game) return response.data.game;
         if (response.data.data) return response.data.data;
@@ -32,9 +28,10 @@ export const getGameById = async (id) => {
     } catch (error) {
         console.error("Error fetching game details:", error);
         throw error;
-    }};
+    }
+};
 
-    export const createGame = async (gameData) => {
+export const createGame = async (gameData) => {
     try {
         const response = await api.post('/games', gameData);
         return response.data;

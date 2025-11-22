@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { getGames } from './../services/games';
-import { Star, ArrowRight, Search, Zap } from 'lucide-react';
-import { getGameImageByTitle } from './../utils/gameImages'; 
+import { Search, Zap } from 'lucide-react';
+import GameCard from '../components/games/GameCard'; 
 
 const HomePage = () => {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    
+ 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [gamesPerPage] = useState(20); 
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -23,17 +26,29 @@ const HomePage = () => {
         fetchGames();
     }, []);
 
-    const getGameImage = (game) => {
-        return getGameImageByTitle(game.titulo, game.img);
-    };
-
     const filteredGames = games.filter(game => 
         game.titulo && game.titulo.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const indexOfLastGame = currentPage * gamesPerPage;
+    const indexOfFirstGame = indexOfLastGame - gamesPerPage;
+    const currentGames = filteredGames.slice(indexOfFirstGame, indexOfLastGame);
+    const totalPages = Math.ceil(filteredGames.length / gamesPerPage);
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
     return (
         <div className="min-h-screen bg-gray-950 text-gray-100 font-sans pb-12">
             
+
             <header className="py-12 px-4 text-center relative overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-purple-900/10 blur-3xl -z-10 rounded-full opacity-50 pointer-events-none"></div>
                 
@@ -58,11 +73,13 @@ const HomePage = () => {
                 </div>
             </header>
 
-            {}
+
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-2 mb-6">
                     <Zap className="text-yellow-400 h-6 w-6 fill-current" />
-                    <h2 className="text-2xl font-bold text-white">Juegos Destacados</h2>
+                    <h2 className="text-2xl font-bold text-white">
+                        {searchTerm ? `Resultados para "${searchTerm}"` : "Biblioteca de Juegos"}
+                    </h2>
                 </div>
 
                 {loading ? (
@@ -70,52 +87,43 @@ const HomePage = () => {
                          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {filteredGames.map((game) => (
-                            <Link to={`/game/${game._id || game.id}`} key={game._id || game.id} className="block group">
-                                <div className="relative bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
-                                    
-                                    {/* IMAGEN */}
-                                    <div className="relative h-56 overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80 z-10"/>
-                                        <img 
-                                            src={getGameImage(game)} 
-                                            alt={game.titulo} 
-                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                        />
-                                        <div className="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 border border-gray-700 shadow-lg">
-                                           <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                                           <span className="text-xs font-bold text-white">
-                                             {game.puntuacionPromedio ? game.puntuacionPromedio.toFixed(1) : "-"}
-                                           </span>
-                                        </div>
-                                    </div>
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {currentGames.length > 0 ? (
+                                currentGames.map((game) => (
+                                    <GameCard key={game._id || game.id} game={game} />
+                                ))
+                            ) : (
+                                <div className="col-span-full text-center text-gray-500 py-10">
+                                    No se encontraron juegos con ese nombre.
+                                </div>
+                            )}
+                        </div>
 
-                                    {}
-                                <div className="p-5 flex flex-col flex-grow relative z-20">
-    <div className="mb-4">
-        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-400 mb-2 border border-purple-500/20">
-            {game.genero}
-        </span>
-        <h3 className="text-lg font-bold text-white leading-tight group-hover:text-purple-400 transition-colors line-clamp-1">
-            {game.titulo}
-        </h3>
-        
-        {}
-        <p className="text-gray-400 text-xs mt-2 line-clamp-2">
-            {game.descripcion || "Sin descripción disponible."}
-        </p>
-        {}
-    </div>
-    
-    <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-800/50">
-        {}
-    </div>
-</div>
-                </div>
-            </Link>
-                        ))}
-                    </div>
+                        {totalPages > 1 && (
+                            <div className="flex justify-center items-center mt-12 gap-4">
+                                <button 
+                                    onClick={() => paginate(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    ← Anterior
+                                </button>
+
+                                <span className="text-gray-400 font-mono text-sm">
+                                    Página <span className="text-white font-bold text-base">{currentPage}</span> de {totalPages}
+                                </span>
+
+                                <button 
+                                    onClick={() => paginate(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Siguiente →
+                                </button>
+                            </div>
+                        )}
+                    </>
                 )}
             </main>
         </div>

@@ -2,21 +2,17 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 
-
 import Navbar from './components/layout/Navbar';
-
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import GameDetailsPage from './pages/games/GameDetailsPage';
-
 import CreateGamePage from './pages/admin/CreateGamePage';
 import EditGamePage from './pages/admin/EditGamePage.jsx'; 
 
-// Componente 404
 const NotFoundPage = () => (
-  <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center text-center px-4">
-    <h1 className="text-9xl font-extrabold text-purple-600 opacity-50">404</h1>
+  <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+    <h1 className="text-9xl font-extrabold text-purple-600 opacity-50 select-none">404</h1>
     <div className="absolute mt-2">
       <p className="text-2xl font-bold text-white mb-2">Página No Encontrada</p>
       <p className="text-gray-400 mb-8">Parece que te has perdido en el mapa del juego.</p>
