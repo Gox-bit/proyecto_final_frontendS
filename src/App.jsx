@@ -9,6 +9,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import GameDetailsPage from './pages/games/GameDetailsPage';
 import CreateGamePage from './pages/admin/CreateGamePage';
 import EditGamePage from './pages/admin/EditGamePage.jsx'; 
+import ProfilePage from './pages/profile/ProfilePage';
 
 const NotFoundPage = () => (
   <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
@@ -42,6 +43,8 @@ function App() {
             <Route path="/admin/create-game" element={<CreateGamePage />} />
             <Route path="/admin/edit-game/:id" element={<EditGamePage />} />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="/profile" element={<ProfilePage />} /> 
+            <Route path="/profile/:userId" element={<ProfilePage />} />
           </Routes>
           
         </div>

@@ -41,6 +41,26 @@ export const createGame = async (gameData) => {
     }
 };
 
+export const getMyGameStats = async (gameId) => {
+    try {
+        const response = await api.get(`/stats/${gameId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error obteniendo stats:", error);
+        return null;
+    }
+};
+
+export const saveGameStats = async (statsData) => {
+    try {
+        const response = await api.post('/stats', statsData);
+        return response.data;
+    } catch (error) {
+        console.error("Error guardando stats:", error);
+        throw error;
+    }
+};
+
 export const updateGame = async (id, gameData) => {
     try {
         const response = await api.put(`/games/${id}`, gameData);
@@ -61,3 +81,22 @@ export const deleteGame = async (id) => {
     }
 };
 
+export const getUserProfileStats = async () => {
+    try {
+        const response = await api.get('/stats/user/all');
+        return response.data;
+    } catch (error) {
+        console.error("Error cargando perfil:", error);
+        return [];
+    }
+};
+
+export const getPublicProfileStats = async (userId) => {
+    try {
+        const response = await api.get(`/stats/public/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error cargando perfil público:", error);
+        return [];
+    }
+};
